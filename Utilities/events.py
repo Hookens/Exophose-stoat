@@ -2,13 +2,15 @@
 # See the LICENSE file in the project root for details.
 
 from stoat import ReadyEvent, ServerMemberRemoveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent
+from stoat.enums import Presence
 from stoat.ext.commands import Bot, Gear
 from stoat.ext.commands.events import CommandErrorEvent
 from stoat.ext.commands.errors import BadArgument, CommandNotFound
 from stoat.server import Member, Server
+from stoat.user import UserStatusEdit
 
 from Commands.help import AdminHelp, BundleHelp, DebugHelp, UserHelp
-from Utilities.constants import Identity, LoggingDefaults
+from Utilities.constants import Identity, LoggingDefaults, HelpDefaults
 
 from Debug.debughelpers import try_func_async
 from Utilities.gears import get_gear
@@ -50,6 +52,8 @@ class Events(Gear):
             f"{Identity.BOT} is up. {len(self.bot.gears)} of {LoggingDefaults.GEAR_COUNT} gears running. Currently serving {len(event.servers)} servers.",
             "INFO",
         )
+
+        await self.bot.user.edit(status= UserStatusEdit(text=f"Listening to {HelpDefaults.PREFIX}", presence=Presence.online))
 
     @Gear.listener(CommandErrorEvent)
     @try_func_async()
