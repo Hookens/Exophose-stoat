@@ -2,8 +2,7 @@
 # See the LICENSE file in the project root for details.
 
 from datetime import datetime
-from dataclasses import dataclass
-from typing import Any, Generic, TypeVar, Iterable, Type
+from typing import Any, Generic, Iterable, Type, TypeVar
 
 T = TypeVar("T")
 

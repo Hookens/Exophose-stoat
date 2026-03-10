@@ -1,24 +1,20 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-import requests
-import os
-from stoat import Upload
 from stoat.ext.commands import Bot, Gear
-from stoat.message import Message, SendableEmbed
+from stoat.message import SendableEmbed
 from stoat.server import Member, Role, Server
-from PIL import Image, ImageDraw, ImageFilter
+
+from Utilities.constants import EmbedDefaults, Identity
+from Utilities.datahelpers import AllowedRole, Bundle, BundleRole, CreatedRole
 
 from Debug.debughelpers import try_func_async
-from Utilities.constants import EmbedDefaults, Identity
-from Utilities.datahelpers import Bundle, BundleRole, AllowedRole, CreatedRole
 from Utilities.gears import get_gear
 
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from Utilities.data import Data
-    from Utilities.utilities import Utilities
 
 
 class Embeds(Gear):

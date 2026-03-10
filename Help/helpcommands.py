@@ -2,10 +2,11 @@
 # See the LICENSE file in the project root for details.
 
 from stoat.ext import commands
-from stoat.ext.commands import Bot, Gear, Context
+from stoat.ext.commands import Bot, Context, Gear
+
+from Utilities.constants import HelpTexts
 
 from Debug.debughelpers import try_func_async
-from Utilities.constants import HelpTexts
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING

@@ -1,13 +1,13 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat.ext import commands
 from stoat.ext.commands import Bot, Gear
 from stoat.server import Server, Member
 
 from Utilities.datahelpers import AllowedRole, Bundle, BundleRole
-from Utilities.gears import get_gear
 from Utilities.constants import Indicators, Limits
+
+from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
 

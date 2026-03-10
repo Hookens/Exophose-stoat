@@ -3,10 +3,11 @@
 
 from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
-from stoat.server import Server, Member, Role
+from stoat.server import Member, Role, Server
+
+from Utilities.constants import Indicators
 
 from Debug.debughelpers import try_func_async
-from Utilities.constants import Indicators
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING

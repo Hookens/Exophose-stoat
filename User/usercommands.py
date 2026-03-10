@@ -6,11 +6,11 @@ from stoat.ext.commands import Bot, Context, Gear
 from stoat.server import Member
 
 from Commands.help import UserHelp
-from Debug.debughelpers import try_func_async
 from Utilities.constants import UserTexts
 from Utilities.datahelpers import Parameter
-from Utilities.gears import get_gear
 
+from Debug.debughelpers import try_func_async
+from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
 

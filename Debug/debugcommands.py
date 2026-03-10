@@ -2,20 +2,21 @@
 # See the LICENSE file in the project root for details.
 
 from stoat.ext import commands
-from stoat.ext.commands import Bot, Gear, Context
+from stoat.ext.commands import Bot, Context, Gear
 from stoat import TextChannel
 
-from Debug.debughelpers import try_func_async
-from Utilities.constants import DebugTexts
-from Utilities.gears import get_gear
-from Utilities.datahelpers import Parameter
 from Commands.help import DebugHelp
+from Utilities.constants import DebugTexts
+from Utilities.datahelpers import Parameter
+
+from Debug.debughelpers import try_func_async
+from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from Debug.debugmethods import DebugMethods
     from Commands.handling import Handling
+    from Debug.debugmethods import DebugMethods
 
 
 class DebugCommands(Gear):

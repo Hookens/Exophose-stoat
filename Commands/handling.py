@@ -1,12 +1,13 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
+from stoat.channel import TextChannel
 from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
 from stoat.server import Server
-from stoat.channel import BaseServerChannel
 
 from Utilities.datahelpers import Parameter
+
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING, Any, Callable, Awaitable
@@ -32,7 +33,7 @@ class Handling(Gear):
         return ", ".join(values[:-1]) + f", or {values[-1]}"
 
     def verify_permissions(
-        self, server: Server, channel: BaseServerChannel
+        self, server: Server, channel: TextChannel
     ) -> str | None:
         if not channel.permissions_for(server.me).send_messages:
             return "..."

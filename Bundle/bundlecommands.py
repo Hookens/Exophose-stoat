@@ -1,22 +1,23 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat.ext.commands import Bot, Gear, Group, Context
+from stoat.ext.commands import Bot, Context, Gear, Group
 from stoat.server import Role
 
 from Commands.help import BundleHelp
-from Debug.debughelpers import try_func_async
 from Utilities.constants import BundleTexts, Limits
-from Utilities.gears import get_gear
 from Utilities.datahelpers import Parameter
+
+from Debug.debughelpers import try_func_async
+from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Bundle.bundlemethods import BundleMethods
+    from Commands.handling import Handling
     from Help.helpcommands import HelpCommands
     from Utilities.embeds import Embeds
-    from Commands.handling import Handling
 
 
 class BundleCommands(Gear):

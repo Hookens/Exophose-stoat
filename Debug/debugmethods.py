@@ -4,8 +4,9 @@
 from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
 
+from Utilities.constants import DebugLists, EmbedDefaults, LoadOrder, LoggingDefaults
+
 from Debug.debughelpers import try_func_async
-from Utilities.constants import DebugLists, LoggingDefaults, EmbedDefaults, LoadOrder
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING

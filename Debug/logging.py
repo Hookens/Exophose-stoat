@@ -3,10 +3,10 @@
 
 from datetime import datetime
 from stoat.ext.commands import Bot, Gear
-from stoat.channel import Channel
+from stoat.channel import TextChannel
 from stoat.message import SendableEmbed
 
-from Utilities.constants import LoggingDefaults, Identity
+from Utilities.constants import Identity, LoggingDefaults
 
 
 class Logging(Gear):
@@ -22,7 +22,7 @@ class Logging(Gear):
             f' {type}  [{datetime.now().strftime("%m/%d/%Y %H:%M:%S.%f")[:-3]}] - {event}'
         )
 
-        console_channel: Channel = await self.bot.fetch_channel(LoggingDefaults.CHANNEL)
+        console_channel: TextChannel = await self.bot.fetch_channel(LoggingDefaults.CHANNEL)
 
         await console_channel.send(content=f"```prolog\n{event}\n```")
 
@@ -43,7 +43,7 @@ class Logging(Gear):
         if any(args):
             self.add_field(embed, "Arguments", f"`{args}`")
 
-        console_channel: Channel = self.bot.get_channel(LoggingDefaults.CHANNEL)
+        console_channel: TextChannel = self.bot.get_channel(LoggingDefaults.CHANNEL)
 
         await console_channel.send(embeds=[embed], content=f"<@{Identity.ID}>")
 

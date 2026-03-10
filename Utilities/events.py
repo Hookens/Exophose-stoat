@@ -1,14 +1,16 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-import stoat
-from stoat.ext.commands import Bot, Gear, events
-from stoat.ext.commands.errors import CommandNotFound, BadArgument
-from stoat.server import Server, Member
+from stoat import ReadyEvent, ServerMemberRemoveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent
+from stoat.ext.commands import Bot, Gear
+from stoat.ext.commands.events import CommandErrorEvent
+from stoat.ext.commands.errors import BadArgument, CommandNotFound
+from stoat.server import Member, Server
 
-from Commands.help import DebugHelp, AdminHelp, UserHelp, BundleHelp
+from Commands.help import AdminHelp, BundleHelp, DebugHelp, UserHelp
+from Utilities.constants import Identity, LoggingDefaults
+
 from Debug.debughelpers import try_func_async
-from Utilities.constants import LoggingDefaults, Identity
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
@@ -17,7 +19,6 @@ if TYPE_CHECKING:
     from Debug.logging import Logging
     from Help.helpcommands import HelpCommands
     from Utilities.data import Data
-    from Utilities.embeds import Embeds
     from Utilities.utilities import Utilities
     from Utilities.verification import Verification
 
@@ -26,7 +27,7 @@ class Events(Gear):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    async def send_help(self, event: events.CommandErrorEvent, menu: str = ""):
+    async def send_help(self, event: CommandErrorEvent, menu: str = ""):
         commands: "HelpCommands" = get_gear(self.bot, "HelpCommands")
         if commands:
             await commands.handle_help(event.context, menu=menu)
@@ -40,9 +41,9 @@ class Events(Gear):
 
         await data.delete_server(server.id)
 
-    @Gear.listener(stoat.ReadyEvent)
+    @Gear.listener(ReadyEvent)
     @try_func_async()
-    async def on_ready(self, event: stoat.ReadyEvent):
+    async def on_ready(self, event: ReadyEvent):
         logging: "Logging" = get_gear(self.bot, "Logging")
 
         await logging.log_event(
@@ -50,9 +51,9 @@ class Events(Gear):
             "INFO",
         )
 
-    @Gear.listener(events.CommandErrorEvent)
+    @Gear.listener(CommandErrorEvent)
     @try_func_async()
-    async def on_command_error(self, event: events.CommandErrorEvent):
+    async def on_command_error(self, event: CommandErrorEvent):
         embed = None
 
         if isinstance(event.error, CommandNotFound):
@@ -89,9 +90,9 @@ class Events(Gear):
         if embed is not None:
             await event.context.channel.send(embeds=[embed])
 
-    @Gear.listener(stoat.ServerMemberUpdateEvent)
+    @Gear.listener(ServerMemberUpdateEvent)
     @try_func_async()
-    async def on_member_update(self, event: stoat.ServerMemberUpdateEvent):
+    async def on_member_update(self, event: ServerMemberUpdateEvent):
         data: "Data" = get_gear(self.bot, "Data")
         utilities: "Utilities" = get_gear(self.bot, "Utilities")
         verification: "Verification" = get_gear(self.bot, "Verification")
@@ -142,9 +143,9 @@ class Events(Gear):
         #            except:
         #                pass
 
-    @Gear.listener(stoat.ServerMemberRemoveEvent)
+    @Gear.listener(ServerMemberRemoveEvent)
     @try_func_async()
-    async def on_member_remove(self, event: stoat.ServerMemberRemoveEvent):
+    async def on_member_remove(self, event: ServerMemberRemoveEvent):
         utilities: "Utilities" = get_gear(self.bot, "Utilities")
 
         if event.member.id == self.bot.me.id:
@@ -152,9 +153,9 @@ class Events(Gear):
 
         await utilities.delete_all_roles(event.member)
 
-    @Gear.listener(stoat.ServerRoleDeleteEvent)
+    @Gear.listener(ServerRoleDeleteEvent)
     @try_func_async()
-    async def on_server_role_delete(self, event: stoat.ServerRoleDeleteEvent):
+    async def on_server_role_delete(self, event: ServerRoleDeleteEvent):
         data: "Data" = get_gear(self.bot, "Data")
 
         role = event.role_id

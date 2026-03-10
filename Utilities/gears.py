@@ -1,10 +1,7 @@
-from typing import Type, TypeVar, TYPE_CHECKING, cast
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from stoat.ext.commands import Bot, Gear
-
-T = TypeVar("T")
-
+    from stoat.ext.commands import Bot
 
 def get_gear(bot: "Bot", gear: str):
     """

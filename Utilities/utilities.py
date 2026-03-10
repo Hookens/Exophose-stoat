@@ -2,10 +2,11 @@
 # See the LICENSE file in the project root for details.
 
 from stoat.ext.commands import Bot, Gear
-from stoat.server import Server, Member, Role
+from stoat.server import Member, Role, Server
+
+from Utilities.datahelpers import CreatedRole
 
 from Debug.debughelpers import try_func_async
-from Utilities.datahelpers import CreatedRole
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING

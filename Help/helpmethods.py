@@ -4,7 +4,6 @@
 from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
 
-from Debug.debughelpers import try_func_async
 from Utilities.constants import (
     HelpDefaults,
     AdminTexts,
@@ -12,6 +11,8 @@ from Utilities.constants import (
     BundleTexts,
     Limits,
 )
+
+from Debug.debughelpers import try_func_async
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING

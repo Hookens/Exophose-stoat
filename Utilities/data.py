@@ -1,13 +1,12 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat.ext.commands import Bot, Gear
 from mysql import connector
 from mysql.connector import MySQLConnection
-import os
+from stoat.ext.commands import Bot, Gear
 
 from Utilities.constants import Env
-from Utilities.datahelpers import Bundle, BundleRole, ExoRole, CreatedRole, AllowedRole
+from Utilities.datahelpers import AllowedRole, Bundle, BundleRole, CreatedRole, ExoRole
 
 from typing import TYPE_CHECKING
 
