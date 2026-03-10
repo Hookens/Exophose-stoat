@@ -79,7 +79,7 @@ class HelpDefaults:
 
     # It would be cool if you could leave those as-is so people know where to find the bot
     BOT_INVITE = "[Have it for yourself :01KHQ68H4HNYJQRSN26A5MA4TN:](https://stoat.chat/bot/01KHMM0YME8WZYK4EJ1YV8NYYA)"
-    SUPPORT_SERVER = "[For updates, feedback & issues :01KHQ688SMN559DHQGN2MG16V1:](https://stt.gg/VpGj7GHn)"
+    SUPPORT_SERVER = "[For updates, feedback & issues :01KHQ688SMN559DHQGN2MG16V1:](https://stt.gg/aKFcCTdJ)"
     SUPPORT_ME = "[It's entirely optional :01KHQ67RXSYA4TAMMV4B798ZEZ:](https://ko-fi.com/hookens)"
     SOURCE_CODE = "[Host it yourself :01KHQ6CSRN9NFC271VGRD9BCAM:](https://github.com/Hookens/Exophose-stoat)"
 

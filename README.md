@@ -4,7 +4,7 @@
 Exophose is a simple role management bot that allows users to create custom roles for themselves and/or select roles from bundles, depending on the configuration.
 
 - **Invite Exophose**  •  [Have it for yourself](https://stoat.chat/bot/01KHMM0YME8WZYK4EJ1YV8NYYA)
-- **Join the server**  •  [For updates, feedback & issues](https://stt.gg/VpGj7GHn)
+- **Join the server**  •  [For updates, feedback & issues](https://stt.gg/aKFcCTdJ)
 - **Support me**  •  [It's entirely optional](https://ko-fi.com/hookens)
 
 ### Dependencies
