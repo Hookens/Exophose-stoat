@@ -48,7 +48,7 @@ class HelpMethods(Gear):
         embeds: "Embeds" = get_gear(self.bot, "Embeds")
         embed = embeds.generate_embed(
             title="About Exophose",
-            description="Exophose is a simple role management bot that allows users to create custom roles for themselves and/or select roles from bundles, depending on the configuration. It is intended as a reward system, not for role menus.",
+            description="Exophose is a simple role management bot that allows users to create custom roles for themselves and/or select roles from bundles, depending on the configuration.",
             color=HelpDefaults.COLOR,
         )
 
