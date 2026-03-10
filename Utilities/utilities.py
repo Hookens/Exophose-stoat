@@ -1,8 +1,7 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat.ext.commands import Bot
-from stoat.ext import commands
+from stoat.ext.commands import Bot, Gear
 from stoat.server import Server, Member, Role
 
 from Debug.debughelpers import try_func_async
@@ -10,10 +9,12 @@ from Utilities.datahelpers import CreatedRole
 from Utilities.gears import get_gear
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from Utilities.data import Data
 
-class Utilities(commands.Gear):
+
+class Utilities(Gear):
     def __init__(self, bot: Bot):
         self.bot = bot
 
@@ -22,34 +23,35 @@ class Utilities(commands.Gear):
             intcolor: int = int(color, 16)
         except:
             return False
-        
+
         return True
 
     @try_func_async()
     async def parse_color(self, color: str):
-        hexcolor = color.replace('#', '')
+
+        hexcolor = color.replace("#", "")
 
         if not self.parsable_color(hexcolor):
-            return None
-        
+            return color
+
         intcolor = int(hexcolor, 16)
         if intcolor > 0xFFFFFF:
-            intcolor = 0xFFFFFF
+            hexcolor = "FFFFFF"
         elif intcolor <= 0:
-            intcolor = 0x010101
-        
-        return intcolor
+            hexcolor = "FFFFFF"
 
-    #I need to implement a "reference" role feature it appears.
-    #@try_func_async()
-    #async def reposition(self, role: Role):
-    #    data = get_gear(self.bot, Data)
-    #    
+        return f"#{hexcolor}"
+
+    # I need to implement a "reference" role feature it appears.
+    # @try_func_async()
+    # async def reposition(self, role: Role):
+    #    data: 'Data' = get_gear(self.bot, "Data")
+    #
     #    exo_role: ExoRole = await data.get_server(role.server_id)
-    #    
+    #
     #    if exo_role is None or exo_role.id == 0:
     #        return
-    #    
+    #
     #    botrole = await role.server.fetch_role(exo_role.id)
     #
     #    if botrole and role.server.me.server_permissions.manage_roles:
@@ -60,13 +62,15 @@ class Utilities(commands.Gear):
 
     @try_func_async()
     async def delete_role(self, member: Member, role_index: int) -> bool:
-        data = get_gear(self.bot, Data)
-        
-        created_roles: list[CreatedRole] = await data.get_member_roles(member.server_id, member.id)
+        data: "Data" = get_gear(self.bot, "Data")
+
+        created_roles: list[CreatedRole] = await data.get_member_roles(
+            member.server_id, member.id
+        )
 
         if 0 <= role_index < len(created_roles):
             server: Server = self.bot.get_server(created_roles[role_index].server_id)
-            role: Role = server.roles.get(created_roles[role_index].id)
+            role: Role = await server.fetch_role(created_roles[role_index].id)
 
             if await data.delete_member_role(created_roles[role_index].id):
                 try:
@@ -74,30 +78,32 @@ class Utilities(commands.Gear):
                 except:
                     pass
                 return True
-            
+
         return False
 
     @try_func_async()
     async def delete_all_roles(self, member: Member):
-        data = get_gear(self.bot, Data)
+        data: "Data" = get_gear(self.bot, "Data")
 
         if not member.roles:
             return
-        
-        created_roles: list[CreatedRole] = await data.get_member_roles(member.server_id, member.id)
+
+        created_roles: list[CreatedRole] = await data.get_member_roles(
+            member.server_id, member.id
+        )
         if not created_roles:
             return
-        
+
         await data.delete_member_roles(member.server_id, member.id)
 
         server: Server = self.bot.get_server(member.server_id)
         for created_role in created_roles:
-            role: Role = server.roles.get(created_role.id)
+            role: Role = await server.fetch_role(created_role.id)
             try:
                 await role.delete()
             except:
                 pass
 
 
-def setup(bot: Bot):
-    bot.add_gear(Utilities(bot))
+async def setup(bot: Bot):
+    await bot.add_gear(Utilities(bot))

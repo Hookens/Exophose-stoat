@@ -9,7 +9,7 @@ Bundles are still WIP until I figure out those groups on stoat.py
 - [Support server](https://stt.gg/VpGj7GHn)
 
 ## Dependencies
-- [Stoat.py](https://stoatpy.readthedocs.io/en/stable/)
+- [Stoat.py](https://stoatpy.readthedocs.io/en/latest/)
 - [MySQL Connector](https://pypi.org/project/mysql-connector-python/)
 - [Requests](https://requests.readthedocs.io/en/stable/)
 - [Pillow](https://pillow.readthedocs.io/en/stable/)

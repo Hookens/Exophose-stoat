@@ -10,10 +10,10 @@ Constants
 UserCommands
 UserMethods
 
-DebugCommands
-DebugMethods
-DebugHelpers
-Logging
+DebugCommands WORKS
+DebugMethods WORKS
+DebugHelpers WORKS
+Logging WORKS
 
 AdminCommands
 AdminMethods

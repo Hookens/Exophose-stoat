@@ -1,73 +1,68 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat.ext import commands
-from stoat.ext.commands import Bot
+from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
 from stoat.server import Member, Server, Role
 
 from Debug.debughelpers import try_func_async
 from Utilities.gears import get_gear
+from Utilities.constants import Indicators, BundleTexts
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from Utilities.data import Data
     from Utilities.embeds import Embeds
     from Utilities.verification import Verification
 
-class BundleMethods(commands.Gear):
+
+class BundleMethods(Gear):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @try_func_async(embed=True)
-    async def bundle_create(
-            self,
-            server: Server,
-            name: str) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+    async def bundle_create(self, server: Server, name: str) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
         if not verification.is_name_allowed(name):
             return embeds.blacklisted_word()
-        
+
         if await data.count_bundles(server.id) >= 5:
             return embeds.maximum_bundles()
 
         if await data.add_bundle(server.id, name):
             return embeds.bundle_created(name)
 
-            
         return embeds.unexpected_sql_error()
 
     @try_func_async(embed=True)
-    async def bundle_list(
-            self,
-            server: Server) -> SendableEmbed:
-        embeds = get_gear(self.bot, Embeds)
+    async def bundle_list(self, server_id: str) -> SendableEmbed:
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
 
-        return await embeds.bundle_list(server.id)
+        return await embeds.bundle_list(server_id)
 
     @try_func_async(embed=True)
     async def bundle_edit(
-            self,
-            server: Server,
-            index: int,
-            role: Role,
-            add: bool) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+        self, server: Server, index: int, role: Role, action: str
+    ) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
+        index -= 1
+
         if not (0 <= index < await data.count_bundles(server.id)):
             return embeds.bundle_missing_index("edit")
 
         addable = await verification.is_bundle_role_addable(role.id, server.id, index)
 
-        if add:
+        if action == BundleTexts.CHOICES[0]:
             if not verification.is_name_allowed(role.name):
                 return embeds.blacklisted_word()
-                    
+
             if addable == 1:
                 if await data.add_bundle_role(role.id, server.id, index):
                     return embeds.bundle_role_added(role)
@@ -82,122 +77,127 @@ class BundleMethods(commands.Gear):
             else:
                 if await data.delete_bundle_role(role.id, server.id, index):
                     return embeds.bundle_role_removed(role)
-            
+
         return embeds.unexpected_sql_error()
 
     @try_func_async(embed=True)
     async def bundle_delete(
-            self,
-            server: Server,
-            index: int,
-            name: str) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+        self, server: Server, index: int, name: str
+    ) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
+        index -= 1
+
         if not (0 <= index < await data.count_bundles(server.id)):
             return embeds.bundle_missing_index("delete")
-        
+
         if not await verification.is_bundle_selection_valid(server.id, index, name):
             return embeds.bundle_selection_invalid()
-        
+
         if await data.delete_bundle(server.id, index):
             return embeds.bundle_deleted()
-            
+
         return embeds.unexpected_sql_error()
 
     @try_func_async(embed=True)
     async def bundle_allow(
-            self,
-            server: Server,
-            index: int,
-            role: Role) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+        self, server: Server, index: int, role: Role
+    ) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
+        index -= 1
+
         if not (0 <= index < await data.count_bundles(server.id)):
             return embeds.bundle_missing_index("allow")
-        
+
         if not verification.is_name_allowed(role.name):
-                return embeds.blacklisted_word()
-        
-        allowable = await verification.is_bundle_allowed_role_allowable(role.id, server.id, index)
-        if allowable == 1:
+            return embeds.blacklisted_word()
+
+        allowable: Indicators = await verification.is_bundle_allowed_role_allowable(
+            role.id, server.id, index
+        )
+        if allowable == Indicators.ADDABLE:
             if await data.add_bundle_allowed_role(role.id, server.id, index):
                 return embeds.bundle_allowed_role_added(role)
-        elif allowable == 0:
+        elif allowable == Indicators.PRESENT:
             return embeds.bundle_allowed_role_present(role)
         else:
             return embeds.bundle_allowed_role_error(role)
-            
+
         return embeds.unexpected_sql_error()
 
     @try_func_async(embed=True)
     async def bundle_disallow(
-            self,
-            server: Server,
-            index: int,
-            role: Role) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+        self, server: Server, index: int, role: Role
+    ) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
+        index -= 1
+
         if not (0 <= index < await data.count_bundles(server.id)):
             return embeds.bundle_missing_index("disallow")
 
-        allowable = await verification.is_bundle_allowed_role_allowable(role.id, server.id, index)
-        if allowable == 1:
+        allowable = await verification.is_bundle_allowed_role_allowable(
+            role.id, server.id, index
+        )
+        if allowable == Indicators.ADDABLE:
             return embeds.bundle_allowed_role_missing(role)
         else:
             if await data.delete_bundle_allowed_role(role.id, server.id, index):
                 return embeds.bundle_allowed_role_removed(role)
-            
+
         return embeds.unexpected_sql_error()
 
     @try_func_async(embed=True)
-    async def bundle_choices(
-            self,
-            member: Member) -> SendableEmbed:
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
-        
+    async def bundle_choices(self, member: Member) -> SendableEmbed:
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
+
         allowed_roles = await verification.get_allowed_bundle_roles(member)
 
         if not allowed_roles:
             return embeds.not_bundle_allowed()
-        
+
         return await embeds.bundle_choices(allowed_roles)
 
     @try_func_async(embed=True)
     async def bundle_choose(
-            self,
-            server: Server,
-            member: Member,
-            index: int) -> SendableEmbed:
-        data = get_gear(self.bot, Data)
-        embeds = get_gear(self.bot, Embeds)
-        verification = get_gear(self.bot, Verification)
+        self, server: Server, member: Member, index: int
+    ) -> SendableEmbed:
+        data: "Data" = get_gear(self.bot, "Data")
+        embeds: "Embeds" = get_gear(self.bot, "Embeds")
+        verification: "Verification" = get_gear(self.bot, "Verification")
 
         allowed_roles = await verification.get_allowed_bundle_roles(member)
 
+        index -= 1
+
         if not allowed_roles:
             return embeds.not_bundle_allowed()
-        
-        if ((not await verification.check_user_bundle_roles(allowed_roles, member, True)) 
-            or (not (0 <= index < await data.count_bundles_choices(allowed_roles)))):
+
+        if (
+            not await verification.check_user_bundle_roles(allowed_roles, member, True)
+        ) or (not (0 <= index < await data.count_bundles_choices(allowed_roles))):
             return embeds.bundle_missing_choice_index()
-        
+
         chosen_role_id = await data.get_bundles_choice(allowed_roles, index)
-        role: Role = server.roles.get(chosen_role_id)
-        
+        role: Role = await server.fetch_role(chosen_role_id)
+
         try:
-            await member.edit(roles=member.role_ids.append(role.id))
+            roles = set(member.role_ids)
+            roles.add(role.id)
+            await member.edit(roles=roles)
         except:
             return embeds.not_role_allowed(role)
 
         return embeds.bundle_role_selected(role)
-    
 
-def setup(bot: Bot):
-    bot.add_gear(BundleMethods(bot))
+
+async def setup(bot: Bot):
+    await bot.add_gear(BundleMethods(bot))
