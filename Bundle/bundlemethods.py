@@ -181,6 +181,10 @@ class BundleMethods(Gear):
 
         if not allowed_roles:
             return embeds.not_bundle_allowed()
+        
+        # Remove this once backend gets overhauled with permissions to assign any lower role to anyone, including those with roles above us.
+        if not verification.is_member_assignable(server.me, member):
+            return embeds.not_assignable()
 
         if (
             not await verification.check_user_bundle_roles(allowed_roles, member, True)

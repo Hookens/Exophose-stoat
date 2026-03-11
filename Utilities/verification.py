@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Utilities.data import Data
+    from Utilities.utilities import Utilities
 
 
 class Verification(Gear):
@@ -46,6 +47,15 @@ class Verification(Gear):
                 return False
 
         return True
+    
+    #Remove this once backend gets overhauled with permissions to assign any lower role to anyone, including those with roles above us.
+    def is_member_assignable(self, me: Member, member: Member) -> bool:
+        utilities: "Utilities" = get_gear(self.bot, "Utilities")
+
+        me_rank = utilities.get_highest_role(me) or 200
+        member_rank = utilities.get_highest_role(member) or 200
+
+        return me_rank < member_rank
 
     # Custom roles
     async def is_role_allowable(

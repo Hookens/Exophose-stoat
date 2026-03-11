@@ -32,6 +32,10 @@ class UserMethods(Gear):
         utilities: "Utilities" = get_gear(self.bot, "Utilities")
         verification: "Verification" = get_gear(self.bot, "Verification")
 
+        # Remove this once backend gets overhauled with permissions to assign any lower role to anyone, including those with roles above us.
+        if not verification.is_member_assignable(server.me, member):
+            return embeds.not_assignable()
+
         if not await verification.is_user_role_addable(member):
             return embeds.maximum_roles()
 
@@ -49,7 +53,7 @@ class UserMethods(Gear):
         roles = set(member.role_ids)
         roles.add(created_role.id)
         await member.edit(roles=roles)
-        # await utilities.reposition(created_role)
+        await utilities.reposition(server, created_role)
         embed: SendableEmbed = embeds.creation_success()
 
         # if role_badge:

@@ -11,7 +11,7 @@ from Utilities.datahelpers import AllowedRole, Bundle, BundleRole, CreatedRole
 from Debug.debughelpers import try_func_async
 from Utilities.gears import get_gear
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Utilities.data import Data
@@ -43,7 +43,7 @@ class Embeds(Gear):
         return embed
 
     def add_field(
-        self, embed: SendableEmbed, name: str, value: str, heading: Optional[str] = None
+        self, embed: SendableEmbed, name: str, value: str, heading: str | None = None
     ):
         embed.description += f"\n\n{heading or "####"} {name}\n{value}"
 
@@ -65,7 +65,7 @@ class Embeds(Gear):
     def creation_success(self) -> SendableEmbed:
         return self.generate_embed(
             "Role creation success",
-            f"Exophose successfully created your new role.",
+            f"Exophose successfully created your new role. You may need to reload to see changes.",  # Sure hope I can remove that second sentence one day.
             EmbedDefaults.SUCCESS,
         )
 
@@ -264,6 +264,12 @@ class Embeds(Gear):
         return self.generate_embed(
             "Missing feature",
             "Your server does not have role bages unlocked as they are a level 2 boost feature.",
+        )
+
+    def not_assignable(self) -> SendableEmbed:
+        return self.generate_embed(
+            "Unable to assign a role to you",
+            "Exophose cannot assign a role to you because your highest role is higher than Exophose's highest.",
         )
 
     # Bundle

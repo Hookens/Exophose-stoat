@@ -43,23 +43,37 @@ class Utilities(Gear):
 
         return f"#{hexcolor}"
 
-    # I need to implement a "reference" role feature it appears.
-    # @try_func_async()
-    # async def reposition(self, role: Role):
-    #    data: 'Data' = get_gear(self.bot, "Data")
-    #
-    #    exo_role: ExoRole = await data.get_server(role.server_id)
-    #
-    #    if exo_role is None or exo_role.id == 0:
-    #        return
-    #
-    #    botrole = await role.server.fetch_role(exo_role.id)
-    #
-    #    if botrole and role.server.me.server_permissions.manage_roles:
-    #        try:
-    #            await role.edit(rank=botrole.rank - 1)
-    #        except:
-    #            pass
+    def get_highest_role(
+        self, member: Member, requires_assignation: bool = False
+    ) -> int | None:
+        roles = (
+            [role for role in member.roles if role.permissions.allow.assign_roles]
+            if requires_assignation
+            else member.roles
+        )
+
+        if not roles:
+            return None
+
+        return min(role.rank for role in roles)
+
+    # Hopefully replace this in the future if they decide to re-implement individual ranking in role create/edit.
+    @try_func_async()
+    async def reposition(self, server: Server, role: Role):
+        highest = self.get_highest_role(server.me, True)
+
+        if highest is None:
+            return
+
+        target_rank = highest + 1
+
+        roles = sorted(server.roles.values(), key=lambda r: r.rank)
+        roles = [r for r in roles if r.id != role.id]
+        target_rank = min(target_rank, len(roles))
+
+        roles.insert(target_rank, role)
+
+        await server.bulk_edit_role_ranks(roles)
 
     @try_func_async()
     async def delete_role(self, member: Member, role_index: int) -> bool:

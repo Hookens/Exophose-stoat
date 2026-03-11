@@ -184,7 +184,7 @@ class UserTexts:
     C_CREATED = "List created roles."
 
     F_NAME = "Name for the role. **Required** | Length ≤ **32**"
-    F_COLOR = "Color for your role. **Required** | Length ≤ **1000**"
+    F_COLOR = "Color for the role. **Required** | Length ≤ **1000**"
     # F_BADGE = "Badge for your role."
     F_INDEX = "Index of the role."
     F_MEMBER = "Member to list the created roles for."
