@@ -54,7 +54,7 @@ class DebugCommands(Gear):
         channel = channel or ctx.channel
 
         await channel.send(embeds=[embed])
-        await ctx.channel.send(content="Announcement created.")
+        await ctx.message.reply(content="Announcement created.")
 
     @commands.server_only()
     @commands.is_owner()
@@ -62,7 +62,7 @@ class DebugCommands(Gear):
     @try_func_async()
     async def handle_shutdown(self, ctx: Context):
 
-        await ctx.channel.send(content="Shutting down.")
+        await ctx.message.reply(content="Shutting down.")
 
         exit(1)
 
@@ -73,7 +73,7 @@ class DebugCommands(Gear):
     async def handle_reload(self, ctx: Context, gear: str = None):
         methods: "DebugMethods" = get_gear(self.bot, "DebugMethods")
 
-        await ctx.channel.send(embeds=[await methods.reload_gear(gear)])
+        await ctx.message.reply(embeds=[await methods.reload_gear(gear)])
 
     @commands.server_only()
     @commands.is_owner()
@@ -82,7 +82,7 @@ class DebugCommands(Gear):
     async def handle_status(self, ctx: Context):
         methods: "DebugMethods" = get_gear(self.bot, "DebugMethods")
 
-        await ctx.channel.send(embeds=[await methods.gear_status()])
+        await ctx.message.reply(embeds=[await methods.gear_status()])
 
 
 async def setup(bot: Bot):

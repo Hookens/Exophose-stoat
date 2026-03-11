@@ -25,7 +25,7 @@ class HelpCommands(Gear):
     async def handle_help(self, ctx: Context, menu: str = ""):
         methods: "HelpMethods" = get_gear(self.bot, "HelpMethods")
 
-        await ctx.channel.send(embeds=[await methods.generate_help(menu)])
+        await ctx.message.reply(embeds=[await methods.generate_help(menu)])
 
 
 async def setup(bot: Bot):

@@ -47,11 +47,11 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -61,7 +61,7 @@ class BundleCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="list", description=BundleTexts.C_LIST)
     @try_func_async()
@@ -73,13 +73,13 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[await embeds.allowed_roles(ctx.server.id)])
+            await ctx.message.reply(embeds=[await embeds.allowed_roles(ctx.server.id)])
         else:
-            await ctx.channel.send(embeds=[await methods.bundle_list(ctx.server.id)])
+            await ctx.message.reply(embeds=[await methods.bundle_list(ctx.server.id)])
 
     @bundle.command(name="edit", description=BundleTexts.C_EDIT)
     @try_func_async()
@@ -93,11 +93,11 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -122,7 +122,7 @@ class BundleCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="delete", description=BundleTexts.C_DELETE)
     @try_func_async()
@@ -134,11 +134,11 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -163,7 +163,7 @@ class BundleCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="allow", description=BundleTexts.C_ALLOW)
     @try_func_async()
@@ -175,11 +175,11 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -197,7 +197,7 @@ class BundleCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="disallow", description=BundleTexts.C_DISALLOW)
     @try_func_async()
@@ -209,11 +209,11 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -231,7 +231,7 @@ class BundleCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="choices", description=BundleTexts.C_CHOICES)
     @try_func_async()
@@ -242,14 +242,14 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         embed = await handling.handle_command(
             methods.bundle_choices, BundleHelp.get_choices_help, member=ctx.author
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @bundle.command(name="choose", description=BundleTexts.C_CHOOSE)
     @try_func_async()
@@ -260,7 +260,7 @@ class BundleCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         embed = await handling.handle_command(
@@ -278,7 +278,7 @@ class BundleCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
 
 async def setup(bot: Bot):

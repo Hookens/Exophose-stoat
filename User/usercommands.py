@@ -41,11 +41,11 @@ class UserCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not await self.allowed(ctx.author):
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -59,7 +59,7 @@ class UserCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @commands.server_only()
     @commands.command(name="remove", description=UserTexts.C_REMOVE)
@@ -72,11 +72,11 @@ class UserCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not await self.allowed(ctx.author):
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -86,7 +86,7 @@ class UserCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @commands.server_only()
     @commands.command(name="recolor", description=UserTexts.C_RECOLOR)
@@ -99,11 +99,11 @@ class UserCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not await self.allowed(ctx.author):
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -117,7 +117,7 @@ class UserCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @commands.server_only()
     @commands.command(name="rename", description=UserTexts.C_RENAME)
@@ -130,11 +130,11 @@ class UserCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not await self.allowed(ctx.author):
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -146,7 +146,7 @@ class UserCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     # @commands.server_only()
     # @commands.command(name="rebadge", description=UserTexts.C_REBADGE)
@@ -159,7 +159,7 @@ class UserCommands(Gear):
     #    methods: 'UserMethods' = get_gear(self.bot, "UserMethods")
     #
     #    if await self.allowed(ctx):
-    #                await ctx.channel.send(embeds=[await methods.role_rebadge(ctx.server, ctx.author, badge, index)])
+    #                await ctx.message.reply(embeds=[await methods.role_rebadge(ctx.server, ctx.author, badge, index)])
 
     @commands.server_only()
     @commands.command(name="created", description=UserTexts.C_CREATED)
@@ -171,11 +171,11 @@ class UserCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not await self.allowed(ctx.author):
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -187,7 +187,7 @@ class UserCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
 
 async def setup(bot: Bot):

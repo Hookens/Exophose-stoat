@@ -38,11 +38,11 @@ class AdminCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -60,7 +60,7 @@ class AdminCommands(Gear):
             member=ctx.author,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @commands.server_only()
     @commands.command(name="disallow", description=AdminTexts.C_DISALLOW)
@@ -73,11 +73,11 @@ class AdminCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
             return
 
         embed = await handling.handle_command(
@@ -87,7 +87,7 @@ class AdminCommands(Gear):
             server=ctx.server,
         )
 
-        await ctx.channel.send(embeds=[embed])
+        await ctx.message.reply(embeds=[embed])
 
     @commands.server_only()
     @commands.command(name="allowed", description=AdminTexts.C_ALLOWED)
@@ -99,13 +99,13 @@ class AdminCommands(Gear):
         content = handling.verify_permissions(ctx.server, ctx.channel)
         if content:
             if content != "...":
-                await ctx.channel.send(content=content)
+                await ctx.message.reply(content=content)
             return
 
         if not ctx.author.server_permissions.manage_roles:
-            await ctx.channel.send(embeds=[embeds.not_user_allowed()])
+            await ctx.message.reply(embeds=[embeds.not_user_allowed()])
         else:
-            await ctx.channel.send(embeds=[await embeds.allowed_roles(ctx.server.id)])
+            await ctx.message.reply(embeds=[await embeds.allowed_roles(ctx.server.id)])
 
 
 async def setup(bot: Bot):
