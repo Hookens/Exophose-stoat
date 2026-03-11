@@ -97,9 +97,11 @@ class HelpMethods(Gear):
             f"`allowed` - {AdminTexts.C_ALLOWED}\n"
         )
         tips: str = (
+            f"- Roles are created under the highest role Exophose has with `assign_roles` permission.\n"
+            f"- Roles can only be assigned to users that are lower in the rank hierarchy.\n"
             f"- The maximum roles can be edited by re-allowing a role.\n"
             f"- A maximum of {Limits.ALLOW_LIMIT} roles can be allowed.\n"
-            f"- A maximum of {Limits.CREATE_LIMIT} be configured for the creation limit."
+            f"- A maximum of {Limits.CREATE_LIMIT} can be configured for the creation limit."
         )
 
         embeds.add_field(embed, "Commands", commands)
