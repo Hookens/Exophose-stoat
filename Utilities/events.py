@@ -24,6 +24,8 @@ if TYPE_CHECKING:
     from Utilities.utilities import Utilities
     from Utilities.verification import Verification
 
+READY: bool = False
+
 
 class Events(Gear):
     def __init__(self, bot: Bot):
@@ -46,14 +48,15 @@ class Events(Gear):
     @Gear.listener(ReadyEvent)
     @try_func_async()
     async def on_ready(self, event: ReadyEvent):
-        logging: "Logging" = get_gear(self.bot, "Logging")
+        if not READY:
+            logging: "Logging" = get_gear(self.bot, "Logging")
+            await logging.log_event(
+                f"{Identity.BOT} is up. {len(self.bot.gears)} of {LoggingDefaults.GEAR_COUNT} gears running. Currently serving {len(event.servers)} servers.",
+                "INFO",
+            )
 
-        await logging.log_event(
-            f"{Identity.BOT} is up. {len(self.bot.gears)} of {LoggingDefaults.GEAR_COUNT} gears running. Currently serving {len(event.servers)} servers.",
-            "INFO",
-        )
-
-        await self.bot.user.edit(status= UserStatusEdit(text=f"Listening to {HelpDefaults.PREFIX}", presence=Presence.online))
+            await self.bot.user.edit(status= UserStatusEdit(text=f"Listening to {HelpDefaults.PREFIX}", presence=Presence.online))
+            READY = True
 
     @Gear.listener(CommandErrorEvent)
     @try_func_async()
@@ -153,7 +156,7 @@ class Events(Gear):
         utilities: "Utilities" = get_gear(self.bot, "Utilities")
 
         if event.member.id == self.bot.me.id:
-            await self.delete_server(event.member.get_server())
+            await self.delete_server(event.server_id)
 
         await utilities.delete_all_roles(event.member)
 
