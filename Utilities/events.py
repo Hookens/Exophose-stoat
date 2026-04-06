@@ -24,12 +24,11 @@ if TYPE_CHECKING:
     from Utilities.utilities import Utilities
     from Utilities.verification import Verification
 
-READY: bool = False
-
 
 class Events(Gear):
     def __init__(self, bot: Bot):
         self.bot = bot
+        self.ready = False
 
     async def send_help(self, event: CommandErrorEvent, menu: str = ""):
         commands: "HelpCommands" = get_gear(self.bot, "HelpCommands")
@@ -48,7 +47,9 @@ class Events(Gear):
     @Gear.listener(ReadyEvent)
     @try_func_async()
     async def on_ready(self, event: ReadyEvent):
-        if not READY:
+        if not self.ready:
+            self.ready = True
+
             logging: "Logging" = get_gear(self.bot, "Logging")
             await logging.log_event(
                 f"{Identity.BOT} is up. {len(self.bot.gears)} of {LoggingDefaults.GEAR_COUNT} gears running. Currently serving {len(event.servers)} servers.",
@@ -56,7 +57,6 @@ class Events(Gear):
             )
 
             await self.bot.user.edit(status= UserStatusEdit(text=f"Listening to {HelpDefaults.PREFIX}", presence=Presence.online))
-            READY = True
 
     @Gear.listener(CommandErrorEvent)
     @try_func_async()
