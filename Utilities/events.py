@@ -6,7 +6,8 @@ from stoat.enums import Presence
 from stoat.ext.commands import Bot, Gear
 from stoat.ext.commands.events import CommandErrorEvent
 from stoat.ext.commands.errors import BadArgument, CommandNotFound
-from stoat.server import Member, Server
+from stoat.message import Message
+from stoat.server import Member
 from stoat.user import UserStatusEdit
 
 from Commands.help import AdminHelp, BundleHelp, DebugHelp, UserHelp
@@ -19,7 +20,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Debug.logging import Logging
-    from Help.helpcommands import HelpCommands
+    from Help.helpcommands import HelpMethods
     from Utilities.data import Data
     from Utilities.utilities import Utilities
     from Utilities.verification import Verification
@@ -30,10 +31,10 @@ class Events(Gear):
         self.bot = bot
         self.ready = False
 
-    async def send_help(self, event: CommandErrorEvent, menu: str = ""):
-        commands: "HelpCommands" = get_gear(self.bot, "HelpCommands")
-        if commands:
-            await commands.handle_help(event.context, menu=menu)
+    async def send_help(self, message: Message, menu: str = ""):
+        methods: "HelpMethods" = get_gear(self.bot, "HelpMethods")
+        if methods:
+            await message.reply(embeds=[await methods.generate_help(menu)])
 
     @try_func_async()
     async def delete_server(self, server_id: str):
@@ -48,7 +49,7 @@ class Events(Gear):
     @try_func_async()
     async def on_message(self, event: MessageCreateEvent):
         if event.message.author_id != self.bot.me.id and event.message.content.strip() == Identity.PREFIX.strip():
-            await self.send_help(event)
+            await self.send_help(event.message)
 
     @Gear.listener(ReadyEvent)
     @try_func_async()
@@ -70,7 +71,7 @@ class Events(Gear):
         embed = None
 
         if isinstance(event.error, CommandNotFound):
-            await self.send_help(event)
+            await self.send_help(event.context.message)
         elif isinstance(event.error, BadArgument):
             match event.context.command.qualified_name:
                 case "announce":
@@ -98,10 +99,10 @@ class Events(Gear):
                 case "bundle choose":
                     embed = BundleHelp.get_choose_help()
                 case _:
-                    await self.send_help(event)
+                    await self.send_help(event.context.message)
 
         if embed is not None:
-            await event.context.channel.send(embeds=[embed])
+            await event.context.message.reply(embeds=[embed])
 
     @Gear.listener(ServerMemberUpdateEvent)
     @try_func_async()
