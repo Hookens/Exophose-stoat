@@ -36,13 +36,13 @@ class Events(Gear):
             await commands.handle_help(event.context, menu=menu)
 
     @try_func_async()
-    async def delete_server(self, server: Server):
+    async def delete_server(self, server_id: str):
         data: "Data" = get_gear(self.bot, "Data")
 
-        if server.name is None:
+        if server_id is None:
             return
 
-        await data.delete_server(server.id)
+        await data.delete_server(server_id)
 
     @Gear.listener(MessageCreateEvent)
     @try_func_async()
