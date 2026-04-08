@@ -1,7 +1,7 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
-from stoat import ReadyEvent, ServerMemberRemoveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent
+from stoat import ReadyEvent, MessageCreateEvent, ServerMemberRemoveEvent, ServerMemberUpdateEvent, ServerRoleDeleteEvent
 from stoat.enums import Presence
 from stoat.ext.commands import Bot, Gear
 from stoat.ext.commands.events import CommandErrorEvent
@@ -43,6 +43,12 @@ class Events(Gear):
             return
 
         await data.delete_server(server.id)
+
+    @Gear.listener(MessageCreateEvent)
+    @try_func_async()
+    async def on_message(self, event: MessageCreateEvent):
+        if event.message.author_id != self.bot.me.id and event.message.content.strip() == Identity.PREFIX.strip():
+            await self.send_help(event)
 
     @Gear.listener(ReadyEvent)
     @try_func_async()
