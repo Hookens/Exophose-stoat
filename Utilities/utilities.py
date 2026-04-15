@@ -97,21 +97,19 @@ class Utilities(Gear):
         return False
 
     @try_func_async()
-    async def delete_all_roles(self, member: Member):
+    async def delete_all_roles(self, server_id: str, user_id: str):
         data: "Data" = get_gear(self.bot, "Data")
 
-        if not member.roles:
-            return
-
         created_roles: list[CreatedRole] = await data.get_member_roles(
-            member.server_id, member.id
+            server_id, user_id
         )
+
         if not created_roles:
             return
 
-        await data.delete_member_roles(member.server_id, member.id)
+        await data.delete_member_roles(server_id, user_id)
 
-        server: Server = self.bot.get_server(member.server_id)
+        server: Server = self.bot.get_server(server_id)
         for created_role in created_roles:
             role: Role = await server.fetch_role(created_role.id)
             try:

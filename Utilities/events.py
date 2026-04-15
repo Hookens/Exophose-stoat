@@ -19,6 +19,7 @@ from Utilities.gears import get_gear
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from Commands.handling import Handling
     from Debug.logging import Logging
     from Help.helpcommands import HelpMethods
     from Utilities.data import Data
@@ -49,6 +50,14 @@ class Events(Gear):
     @try_func_async()
     async def on_message(self, event: MessageCreateEvent):
         if event.message.author_id != self.bot.me.id and event.message.content.strip() == Identity.PREFIX.strip():
+            handling: "Handling" = get_gear(self.bot, "Handling")
+
+            content = handling.verify_permissions(event.message.server, event.message.channel)
+            if content:
+                if content != "...":
+                    await event.message.reply(content=content)
+                return
+            
             await self.send_help(event.message)
 
     @Gear.listener(ReadyEvent)
@@ -162,10 +171,10 @@ class Events(Gear):
     async def on_member_remove(self, event: ServerMemberRemoveEvent):
         utilities: "Utilities" = get_gear(self.bot, "Utilities")
 
-        if event.member.id == self.bot.me.id:
+        if event.user_id == self.bot.me.id:
             await self.delete_server(event.server_id)
 
-        await utilities.delete_all_roles(event.member)
+        await utilities.delete_all_roles(event.server_id, event.user_id)
 
     @Gear.listener(ServerRoleDeleteEvent)
     @try_func_async()

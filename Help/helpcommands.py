@@ -12,6 +12,7 @@ from Utilities.gears import get_gear
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from Commands.handling import Handling
     from Help.helpmethods import HelpMethods
 
 
@@ -24,6 +25,13 @@ class HelpCommands(Gear):
     @try_func_async()
     async def handle_help(self, ctx: Context, menu: str = ""):
         methods: "HelpMethods" = get_gear(self.bot, "HelpMethods")
+        handling: "Handling" = get_gear(self.bot, "Handling")
+
+        content = handling.verify_permissions(ctx.server, ctx.channel)
+        if content:
+            if content != "...":
+                await ctx.message.reply(content=content)
+            return
 
         await ctx.message.reply(embeds=[await methods.generate_help(menu)])
 

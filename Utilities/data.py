@@ -87,7 +87,7 @@ class Data(Gear):
         allow_gradients: bool,
     ) -> bool:
         await self._log_sql_event(
-            f"Allowed R'{role_id}' ({max_roles}, {allow_badges}, {allow_gradients}) from G'{server_id}' by U'{user_id}'",
+            f"Allowed R'{role_id}' ({max_roles}, {allow_badges}, {allow_gradients}) from S'{server_id}' by U'{user_id}'",
             "INFO",
         )
         return await self._execute_write_operation(
@@ -102,7 +102,7 @@ class Data(Gear):
 
     async def add_member_role(self, role_id: str, server_id: str, user_id: str) -> bool:
         await self._log_sql_event(
-            f"Created R'{role_id}' from G'{server_id}' by U'{user_id}'", "INFO"
+            f"Created R'{role_id}' from S'{server_id}' by U'{user_id}'", "INFO"
         )
         return await self._execute_write_operation(
             "ExoAddMemberRole", role_id, server_id, user_id
@@ -202,7 +202,7 @@ class Data(Gear):
         )
 
     async def delete_server(self, server_id: str) -> bool:
-        await self._log_sql_event(f"Removed from G'{server_id}'", "INFO")
+        await self._log_sql_event(f"Removed from S'{server_id}'", "INFO")
         return await self._execute_write_operation("ExoDeleteServer", server_id)
 
     async def delete_allowed_role(self, role_id: str) -> bool:
@@ -214,7 +214,7 @@ class Data(Gear):
         return await self._execute_write_operation("ExoDeleteMemberRole", role_id)
 
     async def delete_member_roles(self, server_id: str, user_id: str) -> bool:
-        await self._log_sql_event(f"Removed U'{user_id}' from G'{server_id}'", "INFO")
+        await self._log_sql_event(f"Removed U'{user_id}' from S'{server_id}'", "INFO")
         return await self._execute_write_operation(
             "ExoDeleteMemberRoles", server_id, user_id
         )
@@ -350,7 +350,7 @@ class Data(Gear):
 
     async def delete_bundle(self, server_id: str, index: int) -> bool:
         await self._log_sql_event(
-            f"Bundle '{index}' removed from G'{server_id}'", "INFO"
+            f"Bundle '{index}' removed from S'{server_id}'", "INFO"
         )
         return await self._execute_write_operation("ExoDeleteBundle", server_id, index)
 

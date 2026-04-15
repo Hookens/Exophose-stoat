@@ -1,6 +1,7 @@
 # Copyright (C) 2026 Hookens
 # See the LICENSE file in the project root for details.
 
+from stoat.errors import HTTPException
 from stoat.ext.commands import Bot, Gear
 from stoat.message import SendableEmbed
 from stoat.server import Member, Role, Server
@@ -52,7 +53,15 @@ class UserMethods(Gear):
 
         roles = set(member.role_ids)
         roles.add(created_role.id)
-        await member.edit(roles=roles)
+        
+        try:
+            await member.edit(roles=roles)
+        except HTTPException as e:
+            if e.type == 'NotElevated':
+                return embeds.not_assignable()
+            raise
+
+
         await utilities.reposition(server, created_role)
         embed: SendableEmbed = embeds.creation_success()
 
