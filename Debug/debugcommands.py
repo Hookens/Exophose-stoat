@@ -61,10 +61,11 @@ class DebugCommands(Gear):
     @commands.command(name="shutdown", description=DebugTexts.C_SHUTDOWN)
     @try_func_async()
     async def handle_shutdown(self, ctx: Context):
-
-        await ctx.message.reply(content="Shutting down.")
-
-        exit(1)
+        ctx.bot.shutdown_requested = True
+        try:
+            await ctx.message.reply(content="Shutting down.")
+        finally:
+            await ctx.bot.close()
 
     @commands.server_only()
     @commands.is_owner()

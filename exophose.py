@@ -14,16 +14,45 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+import logging
+import time
+
 from stoat.ext.commands import Bot
+from stoat.shard import Reconnect
 from Utilities.constants import Env, LoadOrder, Identity
 
+_log = logging.getLogger(__name__)
+
+MIN_DELAY = 5
+MAX_DELAY = 300
+HEALTHY_AFTER = 60
 
 class Exophose(Bot):
     async def setup_hook(self):
         for gear in LoadOrder.GEARS:
             await self.load_extension(gear)
 
+def main():
+    delay = MIN_DELAY
+    while True:
+        client = Exophose(command_prefix=Identity.PREFIX)
+        started = time.monotonic()
+        try:
+            client.run(token=Env.API_TOKEN)
+        except KeyboardInterrupt:
+            raise
+        except (Reconnect, OSError, TimeoutError):
+            _log.exception("Connection to Stoat lost; restarting")
 
-client = Exophose(command_prefix=Identity.PREFIX)
+        if client.shutdown_requested:
+            _log.info("Shutdown requested; exiting")
+            return
 
-client.run(token=Env.API_TOKEN)
+        _log.warning("client.run() ended; restarting")
+        if time.monotonic() - started >= HEALTHY_AFTER:
+            delay = MIN_DELAY
+        time.sleep(delay)
+        delay = min(delay * 2, MAX_DELAY)
+
+if __name__ == "__main__":
+    main()
