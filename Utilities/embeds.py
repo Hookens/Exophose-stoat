@@ -269,7 +269,7 @@ class Embeds(Gear):
     def not_color_allowed(self) -> SendableEmbed:
         return self.generate_embed(
             "Invalid color",
-            "The color you have provided is invalid. Make sure it respects CSS structure for colors.",
+            "The color you have provided is invalid. Make sure it respects CSS color structure.",
         )
 
     def not_assignable(self) -> SendableEmbed:

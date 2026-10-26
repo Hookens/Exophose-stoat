@@ -45,8 +45,16 @@ class UserMethods(Gear):
 
         hex_color = await utilities.parse_color(color)
 
-        created_role: Role = await server.create_role(name=name)
-        await created_role.edit(color=hex_color)
+        try:
+            created_role: Role = await server.create_role(name=name)
+            await created_role.edit(color=hex_color)
+        except HTTPException as e:
+            await created_role.delete()
+
+            if e.type == 'FailedValidation':
+                return embeds.not_color_allowed()
+            raise
+    
         if not await data.add_member_role(created_role.id, server.id, member.id):
             await created_role.delete()
             return embeds.unexpected_sql_error()
@@ -59,8 +67,6 @@ class UserMethods(Gear):
         except HTTPException as e:
             if e.type == 'NotElevated':
                 return embeds.not_assignable()
-            elif e.type == 'FailedValidation':
-                return embeds.not_color_allowed()
             raise
 
 
