@@ -266,6 +266,12 @@ class Embeds(Gear):
             "Your server does not have role bages unlocked as they are a level 2 boost feature.",
         )
 
+    def not_color_allowed(self) -> SendableEmbed:
+        return self.generate_embed(
+            "Invalid color",
+            "The color you have provided is invalid. Make sure it respects CSS structure for colors.",
+        )
+
     def not_assignable(self) -> SendableEmbed:
         return self.generate_embed(
             "Unable to assign a role to you",

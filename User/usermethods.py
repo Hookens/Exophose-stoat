@@ -59,6 +59,8 @@ class UserMethods(Gear):
         except HTTPException as e:
             if e.type == 'NotElevated':
                 return embeds.not_assignable()
+            elif e.type == 'FailedValidation':
+                return embeds.not_color_allowed()
             raise
 
 
@@ -120,23 +122,9 @@ class UserMethods(Gear):
 
         try:
             await role.edit(color=hex_color)
-
-            # if role_secondary or role_holographic is True:
-            #    if "ENHANCED_ROLE_COLORS" not in server.features:
-            #        embed.set_footer(text=UserTexts.DF_NO_GRADIENT_PERMS)
-            #    elif not await verification.is_gradient_allowed(ctx.author):
-            #        embed.set_footer(text=UserTexts.DF_NOT_GRADIENT_ALLOWED)
-            #    else:
-            #        if role_holographic:
-            #            await role.edit(holographic=True)
-            #        else:
-            #            hex_secondary = await utilities.parse_color(role_secondary)
-            #            if hex_secondary is None:
-            #                embed.set_footer(text=UserTexts.DF_NOT_VALID_COLOR)
-            #            else:
-            #                colors = RoleColours(primary=primary, secondary=Colour(hex_secondary))
-            #                await role.edit(colors=colors)
-        except Exception as e:
+        except HTTPException as e:
+            if e.type == 'FailedValidation':
+                return embeds.not_color_allowed()
             return embeds.not_edit_allowed(role, "recolor")
 
         return embed
